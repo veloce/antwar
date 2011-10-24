@@ -14,12 +14,11 @@ class MyBot:
     # the ants class is created and setup by the Ants.run method
     def do_setup(self, ants):
         # initialize data structures after learning the game settings
+        self.hills = []
         self.unseen = []
         for row in range(ants.rows):
             for col in range(ants.cols):
                 self.unseen.append((row, col))
-
-        self.hills = []
 
     # do turn is run once per turn
     # the ants class has the game state and is updated by the Ants.run method
@@ -38,7 +37,7 @@ class MyBot:
 
         targets = {}
         def do_move_location(loc, dest):
-            directions = ants.direction(loc, dest)
+            directions = ants.as_crow_direction(loc, dest)
             for direction in directions:
                 if do_move_direction(loc, direction):
                     targets[dest] = loc
@@ -55,7 +54,7 @@ class MyBot:
         ant_dist = []
         for food_loc in ants.food():
             for ant_loc in ants.my_ants():
-                dist = ants.distance(ant_loc, food_loc)
+                dist = ants.as_crow_distance(ant_loc, food_loc)
                 ant_dist.append((dist, ant_loc, food_loc))
         ant_dist.sort()
         for dist, ant_loc, food_loc in ant_dist:
@@ -70,7 +69,7 @@ class MyBot:
         for hill_loc in self.hills:
             for ant_loc in ants.my_ants():
                 if ant_loc not in orders.values():
-                    dist = ants.distance(ant_loc, hill_loc)
+                    dist = ants.as_crow_distance(ant_loc, hill_loc)
                     ant_dist.append((dist, ant_loc))
         ant_dist.sort()
         for dist, ant_loc in ant_dist:
@@ -84,7 +83,7 @@ class MyBot:
             if ant_loc not in orders.values():
                 unseen_dist = []
                 for unseen_loc in self.unseen:
-                    dist = ants.distance(ant_loc, unseen_loc)
+                    dist = ants.as_crow_distance(ant_loc, unseen_loc)
                     unseen_dist.append((dist, unseen_loc))
                 unseen_dist.sort()
                 for dist, unseen_loc in unseen_dist:
