@@ -3,7 +3,7 @@ import sys
 import traceback
 import random
 import time
-from collections import defaultdict
+from collections import defaultdict, deque
 from math import sqrt
 
 MY_ANT = 0
@@ -184,7 +184,7 @@ class Ants():
         d_row, d_col = AIM[direction]
         return ((row + d_row) % self.rows, (col + d_col) % self.cols)
 
-    def as_crow_distance(self, loc1, loc2):
+    def crow_distance(self, loc1, loc2):
         'calculate the closest distance between to locations'
         row1, col1 = loc1
         row2, col2 = loc2
@@ -192,7 +192,7 @@ class Ants():
         d_row = min(abs(row1 - row2), self.rows - abs(row1 - row2))
         return d_row + d_col
 
-    def as_crow_direction(self, loc1, loc2):
+    def crow_direction(self, loc1, loc2):
         'determine the 1 or 2 fastest (closest) directions to reach a location'
         row1, col1 = loc1
         row2, col2 = loc2
@@ -210,9 +210,9 @@ class Ants():
             if row1 - row2 <= height2:
                 d.append('n')
         if col1 < col2:
-            if col2 - col1 >= width2:
+           if col2 - col1 >= width2:
                 d.append('w')
-            if col2 - col1 <= width2:
+           if col2 - col1 <= width2:
                 d.append('e')
         if col2 < col1:
             if col1 - col2 >= width2:
@@ -220,6 +220,25 @@ class Ants():
             if col1 - col2 <= width2:
                 d.append('w')
         return d
+
+    def bfs(self, start):
+        ' Breadth first search generator function '
+        queue, visited = deque([(0, start)]), set([start])
+        while queue:
+            distance, loc = queue.popleft()
+            yield distance, loc
+            adjs = [self.destination(loc, direction) for direction in AIM.keys()]
+            for adj_loc in adjs:
+                if self.passable(adj_loc) and adj_loc not in visited:
+                    visited.add(adj_loc)
+                    queue.append((distance + 1, adj_loc))
+
+    def true_distance(self, loc1, loc2):
+        for distance, loc in self.bfs(loc1):
+            if loc == loc2:
+                return distance
+        return False
+
 
     def visible(self, loc):
         ' determine which squares are visible to the given player '
