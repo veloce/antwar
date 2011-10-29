@@ -54,11 +54,22 @@ class MyBot:
             orders[hill_loc] = None
 
         # find close food
-        ant_dist = []
-        for food_loc in ants.food():
-            ant_loc, path = ants.find_closest_ant(food_loc)
-            if food_loc not in targets and ant_loc not in targets.values():
-                do_move_location(ant_loc, food_loc, path[0])
+        if len(ants.my_ants()) < 5:
+            ant_dist = []
+            for ant_loc in ants.my_ants():
+                for food_loc in ants.food():
+                    path = ants.shortest_path(ant_loc, food_loc)
+                    dist = len(path)
+                    ant_dist.append((dist, ant_loc, path[0]))
+            ant_dist.sort()
+            for dist, ant_loc, direction in ant_dist:
+                if food_loc not in targets and ant_loc not in targets.values():
+                    do_move_location(ant_loc, food_loc, direction)
+        else:
+            for food_loc in ants.food():
+                ant_loc, path = ants.find_closest_ant(food_loc)
+                if food_loc not in targets and ant_loc not in targets.values():
+                    do_move_location(ant_loc, food_loc, path[0])
 
         # attack hills
         for hill_loc, hill_owner in ants.enemy_hills():
