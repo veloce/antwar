@@ -37,7 +37,7 @@ class MyBot:
 
         targets = {}
         def do_move_location(loc, dest):
-            directions = ants.crow_direction(loc, dest)
+            directions = ants.manhattan_direction(loc, dest)
             for direction in directions:
                 if do_move_direction(loc, direction):
                     targets[dest] = loc
@@ -54,7 +54,7 @@ class MyBot:
         ant_dist = []
         for food_loc in ants.food():
             for ant_loc in ants.my_ants():
-                dist = ants.true_distance(ant_loc, food_loc)
+                dist = ants.shortest_distance(ant_loc, food_loc)
                 ant_dist.append((dist, ant_loc, food_loc))
         ant_dist.sort()
         for dist, ant_loc, food_loc in ant_dist:
@@ -69,7 +69,7 @@ class MyBot:
         for hill_loc in self.hills:
             for ant_loc in ants.my_ants():
                 if ant_loc not in orders.values():
-                    dist = ants.true_distance(ant_loc, hill_loc)
+                    dist = ants.shortest_distance(ant_loc, hill_loc)
                     ant_dist.append((dist, ant_loc))
         ant_dist.sort()
         for dist, ant_loc in ant_dist:
@@ -83,7 +83,7 @@ class MyBot:
             if ant_loc not in orders.values():
                 unseen_dist = []
                 for unseen_loc in self.unseen:
-                    dist = ants.crow_distance(ant_loc, unseen_loc)
+                    dist = ants.manhattan_distance(ant_loc, unseen_loc)
                     unseen_dist.append((dist, unseen_loc))
                 unseen_dist.sort()
                 for dist, unseen_loc in unseen_dist:

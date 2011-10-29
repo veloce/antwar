@@ -7,7 +7,6 @@ from collections import defaultdict, deque
 from math import sqrt
 
 MY_ANT = 0
-ANTS = 0
 DEAD = -1
 LAND = -2
 FOOD = -3
@@ -184,15 +183,15 @@ class Ants():
         d_row, d_col = AIM[direction]
         return ((row + d_row) % self.rows, (col + d_col) % self.cols)
 
-    def crow_distance(self, loc1, loc2):
-        'calculate the closest distance between to locations'
+    def manhattan_distance(self, loc1, loc2):
+        'calculate the closest manhattan distance between two locations'
         row1, col1 = loc1
         row2, col2 = loc2
         d_col = min(abs(col1 - col2), self.cols - abs(col1 - col2))
         d_row = min(abs(row1 - row2), self.rows - abs(row1 - row2))
         return d_row + d_col
 
-    def crow_direction(self, loc1, loc2):
+    def manhattan_direction(self, loc1, loc2):
         'determine the 1 or 2 fastest (closest) directions to reach a location'
         row1, col1 = loc1
         row2, col2 = loc2
@@ -233,7 +232,7 @@ class Ants():
                     visited.add(adj_loc)
                     queue.append((distance + 1, adj_loc))
 
-    def true_distance(self, loc1, loc2):
+    def shortest_distance(self, loc1, loc2):
         for distance, loc in self.bfs(loc1):
             if loc == loc2:
                 return distance
