@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from ants import *
+import ants
 
 # define a class with a do_turn method
 # the Ants.run method will parse and update bot input
@@ -108,6 +108,6 @@ if __name__ == '__main__':
         # if run is passed a class with a do_turn method, it will do the work
         # this is not needed, in which case you will need to write your own
         # parsing function and your own game state class
-        Ants.run(MyBot())
+        ants.Ants.run(MyBot())
     except KeyboardInterrupt:
         print('ctrl-c, leaving ...')
