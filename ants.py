@@ -222,20 +222,23 @@ class Ants():
 
     def bfs(self, start):
         ' Breadth first search generator function '
-        queue, visited = deque([(0, start)]), set([start])
+        queue, visited = deque([(None, None, start)]), set([start])
         while queue:
-            distance, loc = queue.popleft()
-            yield distance, loc
-            adjs = [self.destination(loc, direction) for direction in AIM.keys()]
-            for adj_loc in adjs:
+            parent, direction, loc = queue.popleft()
+            yield parent, direction, loc
+            adjs = [(direction, self.destination(loc, direction)) for direction in AIM.keys()]
+            for direction, adj_loc in adjs:
                 if self.passable(adj_loc) and adj_loc not in visited:
                     visited.add(adj_loc)
-                    queue.append((distance + 1, adj_loc))
+                    queue.append((loc, direction, adj_loc))
 
-    def shortest_distance(self, loc1, loc2):
-        for distance, loc in self.bfs(loc1):
-            if loc == loc2:
-                return distance
+    def shortest_path(self, start, end):
+        ' return one of a possible shortest path '
+        paths = {None: []}
+        for parent, direction, child in self.bfs(start):
+            paths[child] = paths[parent] + [direction]
+            if child == end:
+                return paths[child][1:]
         return False
 
 

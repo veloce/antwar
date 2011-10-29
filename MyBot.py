@@ -20,9 +20,6 @@ class MyBot:
             for col in range(ants.cols):
                 self.unseen.append((row, col))
 
-    # do turn is run once per turn
-    # the ants class has the game state and is updated by the Ants.run method
-    # it also has several helper methods to use
     def do_turn(self, ants):
         # track all moves, prevent collisions
         orders = {}
@@ -42,8 +39,6 @@ class MyBot:
                 if do_move_direction(loc, direction):
                     targets[dest] = loc
                     return True
-                break
-            else:
                 return False
 
         # prevent stepping on own hill
@@ -54,7 +49,7 @@ class MyBot:
         ant_dist = []
         for food_loc in ants.food():
             for ant_loc in ants.my_ants():
-                dist = ants.shortest_distance(ant_loc, food_loc)
+                dist = len(ants.shortest_path(ant_loc, food_loc))
                 ant_dist.append((dist, ant_loc, food_loc))
         ant_dist.sort()
         for dist, ant_loc, food_loc in ant_dist:
@@ -69,7 +64,7 @@ class MyBot:
         for hill_loc in self.hills:
             for ant_loc in ants.my_ants():
                 if ant_loc not in orders.values():
-                    dist = ants.shortest_distance(ant_loc, hill_loc)
+                    dist = len(ants.shortest_path(ant_loc, hill_loc))
                     ant_dist.append((dist, ant_loc))
         ant_dist.sort()
         for dist, ant_loc in ant_dist:
