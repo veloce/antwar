@@ -1,0 +1,1 @@
+/home/veloce/dev/antwar/MyBot.py

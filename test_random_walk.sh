@@ -1,0 +1,1 @@
+python tools/playgame.py "python MyBot.py" "python tools/sample_bots/python/HunterBot.py" --map_file tools/maps/random_walk/random_walk_02p_01.map --log_dir game_logs --turns 500 --food random --player_seed 7 --verbose -e
