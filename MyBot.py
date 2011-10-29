@@ -33,13 +33,21 @@ class MyBot:
                 return False
 
         targets = {}
-        def do_move_location(loc, dest):
-            directions = ants.manhattan_direction(loc, dest)
-            for direction in directions:
+        def do_move_location(loc, dest, direction=None):
+            # if direction given use it
+            if direction:
                 if do_move_direction(loc, direction):
                     targets[dest] = loc
                     return True
-                return False
+            # or use direction from manhattan distance
+            else:
+                directions = ants.manhattan_direction(loc, dest)
+                for direction in directions:
+                    if do_move_direction(loc, direction):
+                        targets[dest] = loc
+                        return True
+            return False
+
 
         # prevent stepping on own hill
         for hill_loc in ants.my_hills():
@@ -48,13 +56,9 @@ class MyBot:
         # find close food
         ant_dist = []
         for food_loc in ants.food():
-            for ant_loc in ants.my_ants():
-                dist = len(ants.shortest_path(ant_loc, food_loc))
-                ant_dist.append((dist, ant_loc, food_loc))
-        ant_dist.sort()
-        for dist, ant_loc, food_loc in ant_dist:
+            ant_loc, path = ants.find_closest_ant(food_loc)
             if food_loc not in targets and ant_loc not in targets.values():
-                do_move_location(ant_loc, food_loc)
+                do_move_location(ant_loc, food_loc, path[0])
 
         # attack hills
         for hill_loc, hill_owner in ants.enemy_hills():
@@ -64,7 +68,7 @@ class MyBot:
         for hill_loc in self.hills:
             for ant_loc in ants.my_ants():
                 if ant_loc not in orders.values():
-                    dist = len(ants.shortest_path(ant_loc, hill_loc))
+                    dist = ants.manhattan_distance(ant_loc, hill_loc)
                     ant_dist.append((dist, ant_loc))
         ant_dist.sort()
         for dist, ant_loc in ant_dist:

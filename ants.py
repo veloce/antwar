@@ -232,15 +232,28 @@ class Ants():
                     visited.add(adj_loc)
                     queue.append((loc, direction, adj_loc))
 
+    def find_closest_ant(self, food_loc):
+        ' find closest ant from food square and return its location and path to it '
+        ants = set(self.my_ants())
+        paths = {None: []}
+        for parent, from_dir, child in self.bfs(food_loc):
+            paths[child] = paths[parent] + [from_dir]
+            if child in ants:
+                return child, self.reverse_path(paths[child][1:])
+        return None
+
     def shortest_path(self, start, end):
         ' return one of a possible shortest path '
         paths = {None: []}
-        for parent, direction, child in self.bfs(start):
-            paths[child] = paths[parent] + [direction]
+        for parent, from_dir, child in self.bfs(start):
+            paths[child] = paths[parent] + [from_dir]
             if child == end:
                 return paths[child][1:]
-        return False
+        return None
 
+    def reverse_path(self, path):
+        back = dict(n='s', s='n', w='e', e='w')
+        return [back[direction] for direction in reversed(path)]
 
     def visible(self, loc):
         ' determine which squares are visible to the given player '
