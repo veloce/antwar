@@ -58,9 +58,10 @@ class MyBot:
             ant_dist = []
             for ant_loc in ants.my_ants():
                 for food_loc in ants.food():
-                    path = ants.shortest_path(ant_loc, food_loc)
-                    dist = len(path)
-                    ant_dist.append((dist, ant_loc, path[0]))
+                    path = ants.bfs_shortest_path(ant_loc, food_loc, 10000)
+                    if path:
+                        dist = len(path)
+                        ant_dist.append((dist, ant_loc, path[0]))
             ant_dist.sort()
             for dist, ant_loc, direction in ant_dist:
                 if food_loc not in targets and ant_loc not in targets.values():
@@ -68,7 +69,7 @@ class MyBot:
         else:
             for food_loc in ants.food():
                 ant_loc, path = ants.find_closest_ant(food_loc)
-                if food_loc not in targets and ant_loc not in targets.values():
+                if ant_loc and food_loc not in targets and ant_loc not in targets.values():
                     do_move_location(ant_loc, food_loc, path[0])
 
         # attack hills

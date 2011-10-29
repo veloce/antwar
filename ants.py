@@ -232,23 +232,31 @@ class Ants():
                     visited.add(adj_loc)
                     queue.append((loc, direction, adj_loc))
 
-    def find_closest_ant(self, food_loc):
+    def find_closest_ant(self, food_loc, depth=200):
         ' find closest ant from food square and return its location and path to it '
         ants = set(self.my_ants())
         paths = {None: []}
+        explored = 0
         for parent, from_dir, child in self.bfs(food_loc):
             paths[child] = paths[parent] + [from_dir]
+            explored += 1
             if child in ants:
                 return child, self.reverse_path(paths[child][1:])
-        return None
+            if explored > depth:
+                return None, None
+        return None, None
 
-    def shortest_path(self, start, end):
+    def bfs_shortest_path(self, start, end, depth=200):
         ' return one of a possible shortest path '
         paths = {None: []}
+        explored = 0
         for parent, from_dir, child in self.bfs(start):
             paths[child] = paths[parent] + [from_dir]
+            explored += 1
             if child == end:
                 return paths[child][1:]
+            if explored > depth:
+                return None
         return None
 
     def reverse_path(self, path):
