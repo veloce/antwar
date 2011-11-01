@@ -7,7 +7,7 @@ import ants
 class MyBot:
     def __init__(self):
         # define class level variables, will be remembered between turns
-        pass
+        self.explored = {}
 
     # do_setup is run once at the start of the game
     # after the bot has received the game settings
