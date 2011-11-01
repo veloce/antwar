@@ -241,7 +241,7 @@ class Ants():
             explored += 1
             if child in locs_set:
                 return child, self.reverse_path(paths[child][1:])
-            if explored > depth:
+            if depth and explored > depth:
                 return None, None
         return None, None
 
@@ -257,7 +257,7 @@ class Ants():
             explored += 1
             if child == end:
                 return paths[child][1:]
-            if explored > depth:
+            if depth and explored > depth:
                 return None
         return None
 
