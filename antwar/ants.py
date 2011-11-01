@@ -40,6 +40,7 @@ class Ants():
         self.cols = None
         self.rows = None
         self.map = None
+        self.explored = {} # points of interest in explored map (water, hills)
         self.hill_list = {}
         self.ant_list = {}
         self.dead_list = defaultdict(list)
@@ -111,6 +112,8 @@ class Ants():
                     col = int(tokens[2])
                     if tokens[0] == 'w':
                         self.map[row][col] = WATER
+                        if (row, col) not in self.explored:
+                            self.explored[(row, col)] = WATER
                     elif tokens[0] == 'f':
                         self.map[row][col] = FOOD
                         self.food_list.append((row, col))
@@ -170,7 +173,11 @@ class Ants():
     def passable(self, loc):
         'true if not water'
         row, col = loc
-        return self.map[row][col] != WATER
+        explored = self.explored.get(loc)
+        if explored:
+            return explored != WATER
+        else:
+            return self.map[row][col] != WATER
 
     def unoccupied(self, loc):
         'true if no ants are at the location'
@@ -240,7 +247,7 @@ class Ants():
             paths[child] = paths[parent] + [from_dir]
             explored += 1
             if child in locs_set:
-                return child, self.reverse_path(paths[child][1:])
+                return child, deque(self.reverse_path(paths[child][1:]))
             if depth and explored > depth:
                 return None, None
         return None, None
@@ -256,7 +263,7 @@ class Ants():
             paths[child] = paths[parent] + [from_dir]
             explored += 1
             if child == end:
-                return paths[child][1:]
+                return deque(paths[child][1:])
             if depth and explored > depth:
                 return None
         return None

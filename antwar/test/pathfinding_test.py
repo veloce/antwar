@@ -1,5 +1,6 @@
 import unittest
 from antwar import ants
+from collections import deque
 
 class PathFindingTestCase(unittest.TestCase):
 
@@ -34,9 +35,9 @@ class TestBFS(PathFindingTestCase):
                               ...%%.
                               %.%%%%""")
 
-        self.assertEqual(a.bfs_shortest_path((1,1), (4,1)), ['s', 's', 's'])
-        self.assertEqual(a.bfs_shortest_path((1,1), (1,4)), ['s', 's', 'e', 'e', 'e', 'n', 'n'])
-        self.assertEqual(a.bfs_shortest_path((4,1), (4,5)), ['w', 'w'])
+        self.assertEqual(a.bfs_shortest_path((1,1), (4,1)), deque(['s', 's', 's']))
+        self.assertEqual(a.bfs_shortest_path((1,1), (1,4)), deque(['s', 's', 'e', 'e', 'e', 'n', 'n']))
+        self.assertEqual(a.bfs_shortest_path((4,1), (4,5)), deque(['w', 'w']))
 
     def test_find_closest(self):
         a = self.setup_ant_map("""%%%%%%
@@ -46,7 +47,7 @@ class TestBFS(PathFindingTestCase):
                               ...%%.
                               %.%%%%""")
 
-        self.assertEqual(a.find_closest((1,1), set([(4,2), (1,4)])), ((4,2), ['w', 'n', 'n', 'n']))
+        self.assertEqual(a.find_closest((1,1), set([(4,2), (1,4)])), ((4,2), deque(['w', 'n', 'n', 'n'])))
 
 if __name__ == '__main__':
     unittest.main()
