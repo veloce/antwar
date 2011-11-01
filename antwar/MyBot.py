@@ -60,12 +60,26 @@ class MyBot:
             orders[hill_loc] = None
 
         # find close food
-        for food_loc in ants.food():
-            ant_loc, path = ants.find_closest_ant(food_loc)
-            if ant_loc and (food_loc not in target_dests) and (ant_loc not in target_dests.values()):
-                path = ants.reverse_path(path)
-                if do_move_location(ant_loc, food_loc, path):
-                    logging.info('FEEDER: ' + str(ant_loc) + ' ' + str(food_loc) + ' ' + str(path))
+        if len(ants.my_ants()) < 5:
+            ant_dist = []
+            for ant_loc in ants.my_ants():
+                for food_loc in ants.food():
+                    path = ants.bfs_shortest_path(ant_loc, food_loc, 10000)
+                    if path:
+                        dist = len(path)
+                        ant_dist.append((dist, ant_loc, path))
+            ant_dist.sort()
+            for dist, ant_loc, path in ant_dist:
+                if food_loc not in target_dests and ant_loc not in target_dests.values():
+                    if do_move_location(ant_loc, food_loc, path):
+                        logging.info('FEEDER (1): ' + str(ant_loc) + ' ' + str(food_loc) + ' ' + str(path))
+        else:
+            for food_loc in ants.food():
+                ant_loc, path = ants.find_closest_ant(food_loc)
+                if ant_loc and (food_loc not in target_dests) and (ant_loc not in target_dests.values()):
+                    path = ants.reverse_path(path)
+                    if do_move_location(ant_loc, food_loc, path):
+                        logging.info('FEEDER (2): ' + str(ant_loc) + ' ' + str(food_loc) + ' ' + str(path))
 
         # ants who have an aim shall continue first
         for ant_loc in self.aims.keys():
