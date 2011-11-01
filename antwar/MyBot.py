@@ -85,7 +85,7 @@ class MyBot:
                 self.hills.append(hill_loc)
         ant_dist = []
         for hill_loc in self.hills:
-            for ant_loc in ants.my_ants():
+            for ant_loc in iter(ants.my_ants()):
                 if ant_loc not in orders.values():
                     dist = ants.manhattan_distance(ant_loc, hill_loc)
                     ant_dist.append((dist, ant_loc))
@@ -97,7 +97,7 @@ class MyBot:
         for loc in self.unseen[:]:
             if ants.visible(loc):
                 self.unseen.remove(loc)
-        for ant_loc in ants.my_ants():
+        for ant_loc in iter(ants.my_ants()):
             if ant_loc not in orders.values():
                 unseen_dist = []
                 for unseen_loc in self.unseen:

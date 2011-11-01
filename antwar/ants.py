@@ -156,15 +156,15 @@ class Ants():
                     if owner != MY_ANT]
 
     def my_ants(self):
-        'return a list of all my ants'
-        return [(row, col) for (row, col), owner in self.ant_list.items()
-                    if owner == MY_ANT]
+        'return a set of all my ants'
+        return set([(row, col) for (row, col), owner in self.ant_list.items()
+                    if owner == MY_ANT])
 
     def enemy_ants(self):
-        'return a list of all visible enemy ants'
-        return [((row, col), owner)
+        'return a set of all visible enemy ants'
+        return set([((row, col), owner)
                     for (row, col), owner in self.ant_list.items()
-                    if owner != MY_ANT]
+                    if owner != MY_ANT])
 
     def food(self):
         'return a list of all food locations'
@@ -253,7 +253,7 @@ class Ants():
         return None, None
 
     def find_closest_ant(self, start, depth=150):
-        return self.find_closest(start, set(self.my_ants()), depth)
+        return self.find_closest(start, self.my_ants(), depth)
 
     def bfs_shortest_path(self, start, end, depth=150):
         ' return one of a possible shortest path '
@@ -291,7 +291,7 @@ class Ants():
             # set all spaces as not visible
             # loop through ants and set all squares around ant as visible
             self.vision = [[False]*self.cols for row in range(self.rows)]
-            for ant in self.my_ants():
+            for ant in iter(self.my_ants()):
                 a_row, a_col = ant
                 for v_row, v_col in self.vision_offsets_2:
                     self.vision[a_row+v_row][a_col+v_col] = True
