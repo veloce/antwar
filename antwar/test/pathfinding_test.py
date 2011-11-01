@@ -24,7 +24,6 @@ class PathFindingTestCase(unittest.TestCase):
         return Ants
 
 
-
 class TestBFS(PathFindingTestCase):
 
     def test_shortest_path(self):
@@ -47,7 +46,7 @@ class TestBFS(PathFindingTestCase):
                               ...%%.
                               %.%%%%""")
 
-        self.assertEqual(a.find_closest((1,1), set([(4,2), (1,4)])), ((4,2), deque(['w', 'n', 'n', 'n'])))
+        self.assertEqual(a.find_closest((1,1), set([(4,2), (1,4)])), ((4,2), deque(['s', 's', 's', 'e'])))
 
 if __name__ == '__main__':
     unittest.main()

@@ -78,6 +78,7 @@ class MyBot:
         for food_loc in ants.food():
             ant_loc, path = ants.find_closest_ant(food_loc)
             if ant_loc and food_loc not in target_dests and ant_loc not in target_dests.values():
+                path = ants.reverse_path(path)
                 do_move_location(ant_loc, food_loc, path)
 
         # attack hills

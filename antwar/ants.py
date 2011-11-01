@@ -247,7 +247,7 @@ class Ants():
             paths[child] = paths[parent] + [from_dir]
             explored += 1
             if child in locs_set:
-                return child, deque(self.reverse_path(paths[child][1:]))
+                return child, deque(paths[child][1:])
             if depth and explored > depth:
                 return None, None
         return None, None
@@ -270,7 +270,8 @@ class Ants():
 
     def reverse_path(self, path):
         back = dict(n='s', s='n', w='e', e='w')
-        return [back[direction] for direction in reversed(path)]
+        path = [back[direction] for direction in reversed(path)]
+        return deque(path)
 
     def visible(self, loc):
         ' determine which squares are visible to the given player '
