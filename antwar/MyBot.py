@@ -65,10 +65,8 @@ class MyBot:
             dest, path = self.aims[ant_loc]
             # are we at the end of the road?
             if path:
-                if do_move_location(ant_loc, dest, path):
-                    pass
-                # got stuck somewhere? repath
-                else:
+                if not do_move_location(ant_loc, dest, path):
+                    # got stuck somewhere? repath
                     path = ants.bfs_shortest_path(ant_loc, dest)
                     do_move_location(ant_loc, dest, path)
             # in all cases delete current loc from aims
