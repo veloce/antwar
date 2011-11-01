@@ -1,1 +1,1 @@
-/home/veloce/dev/antwar/antwar/MyBot.py
+/home/veloce/dev/aichallenge/antwar/MyBot.py
