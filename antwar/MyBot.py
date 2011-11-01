@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 import ants
+import logging
+
+logging.basicConfig(filename='../game_logs/ants.log', level=logging.DEBUG)
 
 # define a class with a do_turn method
 # the Ants.run method will parse and update bot input
@@ -56,28 +59,32 @@ class MyBot:
         for hill_loc in ants.my_hills():
             orders[hill_loc] = None
 
+        # find close food
+        for food_loc in ants.food():
+            ant_loc, path = ants.find_closest_ant(food_loc)
+            if ant_loc and (food_loc not in target_dests) and (ant_loc not in target_dests.values()):
+                path = ants.reverse_path(path)
+                if do_move_location(ant_loc, food_loc, path):
+                    logging.info('FEEDER: ' + str(ant_loc) + ' ' + str(food_loc) + ' ' + str(path))
+
         # ants who have an aim shall continue first
         for ant_loc in self.aims.keys():
-            # be sure that ant is not dead
-            if ant_loc not in ants.my_ants():
+            # be sure that ant is not dead nor assigned
+            if (ant_loc not in ants.my_ants()) or (ant_loc in orders.values()):
                 del(self.aims[ant_loc])
                 continue
             dest, path = self.aims[ant_loc]
             # are we at the end of the road?
             if path:
+                # got stuck somewhere? repath
                 if not do_move_location(ant_loc, dest, path):
-                    # got stuck somewhere? repath
-                    path = ants.bfs_shortest_path(ant_loc, dest)
-                    do_move_location(ant_loc, dest, path)
+                    new_path = ants.bfs_shortest_path(ant_loc, dest)
+                    if do_move_location(ant_loc, dest, new_path):
+                        logging.info('REPATH: ' + str(ant_loc) + ' ' + str(dest) + ' ' + str(new_path))
+                else:
+                    logging.info('CONTINUE PATH: ' + str(ant_loc) + ' ' + str(dest) + ' ' + str(path))
             # in all cases delete current loc from aims
             del(self.aims[ant_loc])
-
-        # find close food
-        for food_loc in ants.food():
-            ant_loc, path = ants.find_closest_ant(food_loc)
-            if ant_loc and food_loc not in target_dests and ant_loc not in target_dests.values():
-                path = ants.reverse_path(path)
-                do_move_location(ant_loc, food_loc, path)
 
         # attack hills
         for hill_loc, hill_owner in ants.enemy_hills():
@@ -106,6 +113,7 @@ class MyBot:
                 unseen_dist.sort()
                 for dist, unseen_loc in unseen_dist:
                     if do_move_location(ant_loc, unseen_loc):
+                        logging.info('SCOUT: ' + str(ant_loc) + ' ' + str(unseen_loc))
                         break
 
         # unblock own hill
@@ -114,6 +122,12 @@ class MyBot:
                 for direction in ('s','e','w','n'):
                     if do_move_direction(hill_loc, direction):
                         break
+
+        # track idle ants
+        for ant in iter(ants.my_ants()):
+            if ant not in orders.values():
+                logging.info('IDLE: ' + str(loc))
+
 
 if __name__ == '__main__':
     # psyco will speed up python a little, but is not needed

@@ -239,7 +239,7 @@ class Ants():
                     visited.add(adj_loc)
                     queue.append((loc, direction, adj_loc))
 
-    def find_closest(self, start, locs_set, depth=150):
+    def find_closest(self, start, locs_set, depth=1000):
         ' find closest in a set of locations and return searched loc and path '
         paths = {None: []}
         explored = 0
@@ -252,10 +252,10 @@ class Ants():
                 return None, None
         return None, None
 
-    def find_closest_ant(self, start, depth=150):
+    def find_closest_ant(self, start, depth=1000):
         return self.find_closest(start, self.my_ants(), depth)
 
-    def bfs_shortest_path(self, start, end, depth=150):
+    def bfs_shortest_path(self, start, end, depth=1000):
         ' return one of a possible shortest path '
         paths = {None: []}
         explored = 0
