@@ -39,7 +39,7 @@ class MyBot:
                 direction = path.popleft()
                 # ant who has an aim will be in new_loc next turn
                 new_loc = do_move_direction(loc, direction)
-                if new_loc:
+                if new_loc and ants.passable(new_loc):
                     self.aims[new_loc] = dest, path
                     target_dests[dest] = loc
                     return True
@@ -62,16 +62,17 @@ class MyBot:
             if ant_loc not in ants.my_ants():
                 del(self.aims[ant_loc])
                 continue
-
             dest, path = self.aims[ant_loc]
             # are we at the end of the road?
             if path:
-                # if ant can move, delete old location
                 if do_move_location(ant_loc, dest, path):
-                    del(self.aims[ant_loc])
-            else:
-                del(self.aims[ant_loc])
-
+                    pass
+                # got stuck somewhere? repath
+                else:
+                    path = ants.bfs_shortest_path(ant_loc, dest)
+                    do_move_location(ant_loc, dest, path)
+            # in all cases delete current loc from aims
+            del(self.aims[ant_loc])
 
         # find close food
         for food_loc in ants.food():
