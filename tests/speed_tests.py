@@ -126,7 +126,7 @@ def setup_ant_map(f):
 
 
 
-Ants = setup_ant_map('../tools/maps/maze/maze_02p_01.map')
+Ants = setup_ant_map('tools/maps/maze/maze_02p_01.map')
 
 start = (21,6)
 end = (40, 32)
